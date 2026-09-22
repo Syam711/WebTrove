@@ -105,7 +105,7 @@ function Shell() {
   return (
     <div className="min-h-[100dvh] md:grid md:grid-cols-[16rem_1fr]">
       <aside className="sticky top-0 hidden h-[100dvh] flex-col border-r border-line bg-paper/70 px-4 py-6 backdrop-blur-[2px] md:flex">
-        <Link to="/" className="px-3" title="About Recall"><Wordmark className="text-[26px]" /></Link>
+        <Link to="/" className="px-3" title="About Web Trove"><Wordmark className="text-[26px]" /></Link>
 
         <button onClick={() => setSearching(true)}
           className="mt-6 flex w-full items-center gap-3 rounded-md border border-line bg-raised px-3 py-2 text-left text-[14.5px] text-mute transition-colors hover:border-ink hover:text-ink">
