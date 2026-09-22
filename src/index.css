@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-raised: var(--raised);
+  --color-ink: var(--ink);
+  --color-mute: var(--mute);
+  --color-line: var(--line);
+  --color-clay: var(--clay);
+  --color-clay-deep: var(--clay-deep);
+  --color-on-clay: var(--on-clay);
+  --font-serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --font-sans: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+}
+
+:root {
+  --paper: #f6f2ea;
+  --raised: #fbf8f2;
+  --ink: #1f1d1a;
+  --mute: #6b655b;
+  --line: #ddd6c8;
+  --clay: #b5532f;
+  --clay-deep: #9c4423;
+  --on-clay: #fffaf3;
+  --col-clay: #b5532f; --col-moss: #5f7a4b; --col-ochre: #b8862f;
+  --col-slate: #5b7085; --col-plum: #7c4f6e; --col-stone: #8a8377;
+  color-scheme: light;
+
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #1b1a18;
+    --raised: #222120;
+    --ink: #ece6da;
+    --mute: #a29a8c;
+    --line: #363330;
+    --clay: #d9744f;
+    --clay-deep: #e58862;
+    --on-clay: #1b1a18;
+    --col-clay: #d9744f; --col-moss: #8aa572; --col-ochre: #d4a850;
+    --col-slate: #86a0b8; --col-plum: #b0819f; --col-stone: #a29a8c;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #1b1a18;
+  --raised: #222120;
+  --ink: #ece6da;
+  --mute: #a29a8c;
+  --line: #363330;
+  --clay: #d9744f;
+  --clay-deep: #e58862;
+  --on-clay: #1b1a18;
+  --col-clay: #d9744f; --col-moss: #8aa572; --col-ochre: #d4a850;
+  --col-slate: #86a0b8; --col-plum: #b0819f; --col-stone: #a29a8c;
+  color-scheme: dark;
+}
+
+html, body, #root { min-height: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+::selection { background: color-mix(in srgb, var(--clay) 28%, transparent); }
+@layer base {
+  :focus-visible { outline: 2px solid var(--clay); outline-offset: 2px; }
+}
+
+/* ───────── textured backdrop ───────── */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.backdrop-layer {
+  position: absolute;
+  inset: 0;
+  background-color: var(--ink);
+  -webkit-mask-repeat: repeat;
+  mask-repeat: repeat;
+}
+.glyph {
+  position: absolute;
+  font-family: var(--font-serif);
+  font-style: italic;
+  line-height: 1;
+  color: var(--ink);
+  opacity: var(--o);
+  transform: rotate(var(--r0));
+  user-select: none;
+}
+.glyph.drifts {
+  animation: drift var(--dur) ease-in-out var(--delay) infinite alternate;
+  will-change: transform;
+}
+@keyframes drift {
+  from { transform: translate3d(0, 0, 0) rotate(var(--r0)); }
+  to   { transform: translate3d(var(--dx), var(--dy), 0) rotate(var(--r1)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .glyph.drifts { animation: none; }
+}
+
+/* gentle arrival for new things */
+@keyframes enter { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.enter { animation: enter 0.28s ease-out both; }
+@media (prefers-reduced-motion: reduce) { .enter { animation: none; } }
