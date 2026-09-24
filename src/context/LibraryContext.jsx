@@ -86,12 +86,19 @@ export function LibraryProvider({ children }) {
         patchLink(id, { enrich_status: 'failed', enrich_error: 'Could not reach the page reader.' })
         return
       }
-      patchLink(id, data.link)
+      // If the link had no user-given title and enrichment found one, use it. If the user
+      // gave it a name, keep theirs even if the page has one (they might prefer their own).
+      const before = all.find((l) => l.id === id)
+      if (data.link.title && !before?.title) {
+        patchLink(id, data.link)
+      } else {
+        patchLink(id, { ...data.link, title: before?.title ?? data.link.title })
+      }
       if (data.similar) similarRef.current(data.similar)
     } finally {
       inflight.current.delete(id)
     }
-  }, [patchLink])
+  }, [patchLink, all])
 
   // Links that still need their page read (imports, or a closed tab) are worked through two at a time.
   useEffect(() => {
@@ -115,22 +122,22 @@ export function LibraryProvider({ children }) {
     if (err) { setLC((prev) => setMember(prev, linkId, collectionId, !on)); problem() }
   }, [linkCollections, problem])
 
-  const add = useCallback(async ({ url, intent, note, collectionId }) => {
+  const add = useCallback(async ({ url, intent, note, title, collectionId }) => {
     const clean = normalizeUrl(url)
     if (!clean) return { error: 'That doesn’t look like a link.' }
     const domain = domainOf(clean)
-    const row = { url: clean, domain, intent, note: note?.trim() || null }
+    const row = { url: clean, domain, intent, note: note?.trim() || null, title: title?.trim() || null }
 
     if (!supabase) {
       if (all.some((l) => l.url === clean && !l.deleted_at)) return { duplicate: true }
       const id = crypto.randomUUID()
-      setAll((prev) => [{ id, ...row, title: domain, enrich_status: 'done', created_at: new Date().toISOString() }, ...prev])
+      setAll((prev) => [{ id, ...row, enrich_status: 'done', created_at: new Date().toISOString() }, ...prev])
       if (collectionId) setLC((prev) => setMember(prev, id, collectionId, true))
       return { ok: true }
     }
 
     const tempId = `tmp-${crypto.randomUUID()}`
-    setAll((prev) => [{ id: tempId, ...row, title: null, enrich_status: 'pending', created_at: new Date().toISOString() }, ...prev])
+    setAll((prev) => [{ id: tempId, ...row, enrich_status: 'pending', created_at: new Date().toISOString() }, ...prev])
     const { data, error: err } = await db.insert(row)
     if (err) {
       setAll((prev) => prev.filter((l) => l.id !== tempId))

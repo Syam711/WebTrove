@@ -38,7 +38,7 @@ export default function Landing() {
               <span className="italic text-mute">Find it again.</span>
             </h1>
             <p className="mt-6 max-w-lg text-[18px] leading-relaxed text-mute">
-              Most bookmarks are never opened a second time. Recall remembers why you saved each
+              Most bookmarks are never opened a second time. WebTrove remembers why you saved each
               one, and brings it back when it matters.
             </p>
             <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-3">

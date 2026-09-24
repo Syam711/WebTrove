@@ -27,7 +27,7 @@ export function ViewBar({ text, view, onView }) {
 }
 
 /** The links themselves, as masonry cards or a compact list. */
-export default function LinkGrid({ links, view, actions, copy, noteFor, onOpen, onRetry }) {
+export default function LinkGrid({ links, view, actions, copy, noteFor, onOpen, onRetry, onEditTitle }) {
   const lib = useLibrary()
   if (view === 'list') {
     return (
@@ -40,7 +40,7 @@ export default function LinkGrid({ links, view, actions, copy, noteFor, onOpen, 
     <div className="columns-1 gap-4 md:columns-2">
       {links.map((l) => (
         <LinkCard key={l.id} link={l} tags={lib.tagsOf(l.id)} collections={lib.collectionsOf(l.id)}
-          actions={actions} copy={copy} note={noteFor?.(l)} onOpen={onOpen} onRetry={onRetry} />
+          actions={actions} copy={copy} note={noteFor?.(l)} onOpen={onOpen} onRetry={onRetry} onEditTitle={onEditTitle} />
       ))}
     </div>
   )

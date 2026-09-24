@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Check, Copy } from 'lucide-react'
 import Favicon from './Favicon'
+import EditTitleSheet from './EditTitleSheet'
 import { colorVar } from '../lib/colors'
 import { intentLabel } from '../lib/intents'
 import { timeAgo } from '../lib/time'
@@ -76,7 +77,7 @@ function Status({ link, onRetry }) {
   return null
 }
 
-export function LinkCard({ link, tags = [], collections = [], actions, copy = true, note, onOpen, onRetry }) {
+export function LinkCard({ link, tags = [], collections = [], actions, copy = true, note, onOpen, onRetry, onEditTitle }) {
   const [imgOk, setImgOk] = useState(true)
   const footer = note ?? [intentLabel(link.intent), timeAgo(link.created_at)].filter(Boolean).join(' · ')
 
@@ -90,7 +91,7 @@ export function LinkCard({ link, tags = [], collections = [], actions, copy = tr
         <p className="flex items-center gap-2 text-[12.5px] text-mute">
           <Favicon src={link.favicon_url} domain={link.domain} /> {link.domain}
         </p>
-        <h3 className="mt-2.5 font-serif text-[21px] leading-snug">{link.title || link.domain}</h3>
+        <h3 className="mt-2.5 font-serif text-[21px] leading-snug hover:cursor-pointer hover:text-clay" onClick={(e) => { e.preventDefault(); onEditTitle?.(link) }}>{link.title || link.domain}</h3>
         {link.description && (
           <p className="mt-1.5 line-clamp-3 text-[14px] leading-relaxed text-mute">{link.description}</p>
         )}

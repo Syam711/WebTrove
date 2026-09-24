@@ -16,7 +16,7 @@ export default function SiteHeader() {
         <ThemeToggle />
         {signedIn ? (
           <Link to="/app" className="ml-1 rounded-md bg-clay px-4 py-2 font-medium text-on-clay transition-colors hover:bg-clay-deep">
-            Open Recall
+            Open Trove
           </Link>
         ) : (
           <Link to="/login" className="ml-1 rounded-md border border-line px-4 py-2 transition-colors hover:border-ink">

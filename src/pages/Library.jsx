@@ -7,6 +7,9 @@ import { colorVar } from '../lib/colors'
 import { supabase } from '../lib/supabase'
 import { useLibrary } from '../context/LibraryContext'
 import LinkGrid, { ViewBar } from '../components/LinkGrid'
+import EditTitleSheet from '../components/EditTitleSheet'
+import RevisitCard from '../components/RevisitCard'
+import SaveForm from '../components/SaveForm'
 import { useView } from '../lib/view'
 import LinkSheet from '../components/LinkSheet'
 
@@ -30,6 +33,7 @@ export default function Library() {
   const [message, setMessage] = useState('')
   const [view, setView] = useView()
   const [sheetId, setSheetId] = useState(null)
+  const [editLinkId, setEditLinkId] = useState(null)
   const input = useRef(null)
 
   const scopeKey = collectionId ?? (tagName ? `tag:${tagName}` : 'all')
@@ -106,6 +110,10 @@ export default function Library() {
           {greeting()}<span className="text-clay">.</span>
         </h1>
       )}
+
+      {!collectionId && !tagName && <div className="mt-8"><RevisitCard /></div>}
+
+      <SaveForm collectionId={collection?.id} onSaved={() => { /* could scroll, flash, etc */ }} />
 
       {missingScope ? (
         <p className="mt-6 text-[15px] text-mute">
@@ -206,13 +214,14 @@ export default function Library() {
             {!empty && visible.length === 0 && <p className="text-[15px] text-mute">Nothing matches “{trimmed}”.</p>}
 
             {visible.length > 0 && (
-              <LinkGrid links={visible} view={view} actions={actions} onOpen={lib.opened} onRetry={lib.retry} />
+              <LinkGrid links={visible} view={view} actions={actions} onOpen={lib.opened} onRetry={lib.retry} onEditTitle={(l) => setEditLinkId(l.id)} />
             )}
           </section>
         </>
       )}
 
       {sheetLink && <LinkSheet key={sheetLink.id} link={sheetLink} onClose={() => setSheetId(null)} />}
+      {editLinkId && <EditTitleSheet link={lib.allLinks.find((l) => l.id === editLinkId)} onClose={() => setEditLinkId(null)} />}
     </>
   )
 }
